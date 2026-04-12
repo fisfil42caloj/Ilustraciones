@@ -4,169 +4,84 @@ import {
   lineHeight,
 } from "https://esm.sh/@chenglou/pretext@0.5.0";
 
-const STORAGE_POSTS = "rincon-posts";
-const STORAGE_COMMENTS = "rincon-comments";
+const poemsContainer = document.querySelector("#poems-list");
+const storiesContainer = document.querySelector("#stories-list");
+const currentYear = document.querySelector("#current-year");
 
-const defaultPosts = [
-  {
-    id: crypto.randomUUID(),
-    titulo: "Tarde en la plaza",
-    tipo: "poema",
-    contenido:
-      "El sol se pliega en la fuente,\nlas palomas guardan rumor,\ny en el banco de siempre\nmi ciudad aprende color.",
-    fecha: new Date().toISOString(),
-  },
-  {
-    id: crypto.randomUUID(),
-    titulo: "La lámpara azul",
-    tipo: "cuento",
-    contenido:
-      "Lucía encontró una lámpara azul en el ático. Al encenderla, cada sombra se convirtió en un recuerdo que aún no había vivido.",
-    fecha: new Date().toISOString(),
-  },
-];
-
-const defaultComments = [
-  {
-    id: crypto.randomUUID(),
-    nombre: "Elena",
-    mensaje: "La imagen de la fuente en el poema me encantó. ✨",
-    fecha: new Date().toISOString(),
-  },
-];
-
-const state = {
-  posts: loadData(STORAGE_POSTS, defaultPosts),
-  comments: loadData(STORAGE_COMMENTS, defaultComments),
-};
-
-const form = document.querySelector("#post-form");
-const poemList = document.querySelector("#poemas");
-const storyList = document.querySelector("#cuentos");
-const commentForm = document.querySelector("#comment-form");
-const commentsList = document.querySelector("#comentarios");
-
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const data = new FormData(form);
-
-  const post = {
-    id: crypto.randomUUID(),
-    titulo: String(data.get("titulo") || "Sin título").trim(),
-    tipo: data.get("tipo") === "cuento" ? "cuento" : "poema",
-    contenido: String(data.get("contenido") || "").trim(),
-    fecha: new Date().toISOString(),
-  };
-
-  if (!post.titulo || !post.contenido) return;
-
-  state.posts.unshift(post);
-  saveData(STORAGE_POSTS, state.posts);
-  form.reset();
-  renderPosts();
-});
-
-commentForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const data = new FormData(commentForm);
-
-  const comment = {
-    id: crypto.randomUUID(),
-    nombre: String(data.get("nombre") || "Anónimo").trim(),
-    mensaje: String(data.get("mensaje") || "").trim(),
-    fecha: new Date().toISOString(),
-  };
-
-  if (!comment.mensaje) return;
-
-  state.comments.unshift(comment);
-  saveData(STORAGE_COMMENTS, state.comments);
-  commentForm.reset();
-  renderComments();
-});
-
-function loadData(key, fallback) {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : fallback;
-  } catch {
-    return fallback;
-  }
+async function fetchCollection(path) {
+  const response = await fetch(path, { cache: "no-store" });
+  if (!response.ok) throw new Error();
+  return response.json();
 }
 
-function saveData(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
-}
-
-function prettifyDate(dateString) {
-  return new Intl.DateTimeFormat("es", {
-    dateStyle: "medium",
-    timeStyle: "short",
+function formatDate(dateString) {
+  return new Intl.DateTimeFormat("es-ES", {
+    dateStyle: "long",
   }).format(new Date(dateString));
 }
 
 function computeMinHeight(text, widthPx) {
-  const estimatedCharWidth = 8.2;
-  const lineLength = Math.max(22, Math.floor(widthPx / estimatedCharWidth));
-  const breaks = toLineLengths(text, lineLength);
-  const lines = layout(lineLength, breaks, text).length;
-  const px = Math.ceil(lines * lineHeight + 32);
-  return `${Math.max(px, 120)}px`;
+  const normalized = text.replace(/\n+/g, " ");
+  const lineLength = Math.max(24, Math.floor(widthPx / 8.2));
+  const breaks = toLineLengths(normalized, lineLength);
+  const lines = layout(lineLength, breaks, normalized).length;
+  return `${Math.max(lines * lineHeight + 80, 180)}px`;
 }
 
-function createPostCard(post) {
-  const card = document.createElement("article");
-  card.className = "card";
+function createCard(item, tipo) {
+  const article = document.createElement("article");
+  article.className = "card";
 
-  const title = document.createElement("h4");
-  title.textContent = post.titulo;
+  const title = document.createElement("h3");
+  title.textContent = item.titulo;
 
   const meta = document.createElement("p");
   meta.className = "meta";
-  meta.textContent = `${post.tipo.toUpperCase()} · ${prettifyDate(post.fecha)}`;
+  meta.textContent = formatDate(item.fecha);
 
-  const content = document.createElement("p");
-  content.textContent = post.contenido;
+  const text = document.createElement("div");
+  text.className = "card-text";
 
-  card.append(title, meta, content);
+  if (tipo === "poema") {
+    text.innerHTML = item.texto.replace(/\n/g, "<br>");
+  } else {
+    const paragraphs = item.texto.split(/\n\n+/);
+    paragraphs.forEach(p => {
+      const el = document.createElement("p");
+      el.textContent = p;
+      text.appendChild(el);
+    });
+  }
+
+  article.append(title, meta, text);
 
   requestAnimationFrame(() => {
-    const width = card.clientWidth || 320;
-    card.style.minHeight = computeMinHeight(post.contenido, width);
+    const width = article.clientWidth || 320;
+    article.style.minHeight = computeMinHeight(item.texto, width);
   });
 
-  return card;
+  return article;
 }
 
-function renderPosts() {
-  poemList.innerHTML = "";
-  storyList.innerHTML = "";
-
-  for (const post of state.posts) {
-    const card = createPostCard(post);
-    if (post.tipo === "cuento") {
-      storyList.append(card);
-    } else {
-      poemList.append(card);
-    }
-  }
+function render(items, container, tipo) {
+  container.innerHTML = "";
+  items
+    .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+    .forEach(item => container.appendChild(createCard(item, tipo)));
 }
 
-function renderComments() {
-  commentsList.innerHTML = "";
+async function init() {
+  currentYear.textContent = new Date().getFullYear();
 
-  for (const comment of state.comments) {
-    const li = document.createElement("li");
-    li.innerHTML = `<strong>${comment.nombre}</strong> <span>· ${prettifyDate(
-      comment.fecha
-    )}</span><p>${comment.mensaje}</p>`;
-    commentsList.append(li);
-  }
+  const [poems, stories] = await Promise.all([
+    fetchCollection("./content/poemas.json"),
+    fetchCollection("./content/cuentos.json"),
+  ]);
+
+  render(poems, poemsContainer, "poema");
+  render(stories, storiesContainer, "cuento");
 }
 
-renderPosts();
-renderComments();
+window.addEventListener("resize", init);
 
-window.addEventListener("resize", () => {
-  renderPosts();
-});
+init();
