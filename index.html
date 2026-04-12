@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rincón de Poemas y Cuentos</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <p class="eyebrow">Biblioteca personal</p>
+      <h1>Rincón de Poemas y Cuentos</h1>
+      <p class="subtitle">
+        Publica tus textos, organízalos por género y deja que tu comunidad te
+        acompañe con comentarios.
+      </p>
+      <a href="#publicar" class="cta">Publicar nuevo texto</a>
+    </header>
+
+    <main>
+      <section id="publicar" class="panel">
+        <h2>Publicar texto</h2>
+        <form id="post-form" class="grid-form">
+          <label>
+            Título
+            <input id="titulo" name="titulo" required maxlength="80" />
+          </label>
+          <label>
+            Tipo
+            <select id="tipo" name="tipo">
+              <option value="poema">Poema</option>
+              <option value="cuento">Cuento</option>
+            </select>
+          </label>
+          <label class="full">
+            Texto
+            <textarea
+              id="contenido"
+              name="contenido"
+              rows="7"
+              required
+              placeholder="Escribe aquí tu poema o cuento..."
+            ></textarea>
+          </label>
+          <button type="submit">Guardar publicación</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>Mis publicaciones</h2>
+        <div class="columns">
+          <article>
+            <h3>Poemas</h3>
+            <div id="poemas" class="list"></div>
+          </article>
+          <article>
+            <h3>Cuentos</h3>
+            <div id="cuentos" class="list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Comunidad</h2>
+        <form id="comment-form" class="community-form">
+          <input
+            id="nombre"
+            name="nombre"
+            required
+            maxlength="40"
+            placeholder="Tu nombre"
+          />
+          <textarea
+            id="mensaje"
+            name="mensaje"
+            rows="3"
+            required
+            placeholder="Comparte una opinión sobre un texto..."
+          ></textarea>
+          <button type="submit">Publicar comentario</button>
+        </form>
+        <ul id="comentarios" class="comments"></ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Hecho con ❤️ y <code>@chenglou/pretext</code> para mejorar el layout de textos.</p>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
