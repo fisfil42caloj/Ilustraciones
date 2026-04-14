@@ -1,74 +1,57 @@
-:root {
-  color-scheme: light;
-  --bg: #f6f1ea;
-  --paper: #fffdfa;
-  --ink: #201811;
-  --muted: #6a5b4e;
-  --accent: #8e5235;
-  --line: #e8ddd0;
-  --shadow: 0 18px 45px rgb(32 24 17 / 0.06);
-  --content-width: min(1120px, calc(100vw - 2rem));
-}
-
 body {
   margin: 0;
   font-family: Georgia, serif;
-  background: var(--bg);
-  color: var(--ink);
+  color: #e8e2db;
+  background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(142,82,53,0.15), transparent 40%), #0f0c0a;
 }
 
-.hero, main, .site-footer {
-  width: var(--content-width);
+.shell {
+  width: min(1100px, 92vw);
   margin: auto;
 }
 
-h1, h2, h3 {
-  font-weight: 600;
+.flow-text span {
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+
+.cursor-aura {
+  position: fixed;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255,200,150,0.15), transparent 60%);
+  transform: translate(-50%, -50%);
+  left: var(--mx,50%);
+  top: var(--my,50%);
+}
+
+.symbol-layer span {
+  position: absolute;
+  opacity: 0.06;
+  animation: float 25s linear infinite;
+}
+
+@keyframes float {
+  from { transform: translateY(0); }
+  to { transform: translateY(-200vh); }
 }
 
 .panel {
-  background: var(--paper);
-  border: 1px solid var(--line);
+  background: rgba(20,15,12,0.6);
+  border: 1px solid rgba(255,255,255,0.06);
   padding: 1rem;
   margin-top: 1rem;
-}
-
-.list {
-  display: grid;
-  gap: 1rem;
+  backdrop-filter: blur(6px);
 }
 
 .card {
+  border: 1px solid rgba(255,255,255,0.08);
   padding: 1rem;
-  border: 1px solid var(--line);
+  transition: transform 0.2s;
 }
 
-.search-shell {
-  display: grid;
-  gap: 0.5rem;
-}
-
-.search-row {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.search-input {
-  flex: 1;
-  padding: 0.6rem;
-}
-
-.ghost-button {
-  padding: 0.6rem;
-}
-
-.read-more {
-  display: inline-block;
-  margin-top: 0.5rem;
-  color: var(--accent);
-}
-
-.detail-main {
-  width: min(800px, 92vw);
-  margin: 2rem auto;
+.card:hover {
+  transform: translateY(-4px);
 }

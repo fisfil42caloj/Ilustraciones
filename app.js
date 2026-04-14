@@ -1,163 +1,61 @@
-import {
-  toLineLengths,
-  layout,
-  lineHeight,
-} from "https://esm.sh/@chenglou/pretext@0.5.0";
+const root = document.documentElement;
+const symbolLayer = document.getElementById("symbol-layer");
 
-const poemsContainer = document.querySelector("#poems-list");
-const storiesContainer = document.querySelector("#stories-list");
-const currentYear = document.querySelector("#current-year");
-const searchInput = document.querySelector("#search-input");
-const clearButton = document.querySelector("#clear-search");
-const searchStatus = document.querySelector("#search-status");
-const poemsCount = document.querySelector("#poems-count");
-const storiesCount = document.querySelector("#stories-count");
+const symbols = ["λόγος","ἀλήθεια","οἶκος","σῶμα","χρόνος","lámpara","taza","umbral","sombra","casa"];
 
-let poems = [];
-let stories = [];
-let query = "";
-
-async function fetchCollection(path) {
-  const response = await fetch(path, { cache: "no-store" });
-  if (!response.ok) throw new Error();
-  return response.json();
-}
-
-function slugify(text) {
-  return text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)+/g, "");
-}
-
-function formatDate(dateString) {
-  return new Intl.DateTimeFormat("es-ES", {
-    dateStyle: "long",
-  }).format(new Date(dateString));
-}
-
-function buildPreview(text, widthPx, tipo) {
-  if (tipo === "poema") {
-    const blocks = text.split(/\n\n+/).slice(0, 2);
-    return blocks.join("\n\n");
-  }
-
-  const normalized = text.replace(/\n+/g, " ");
-  const lineLength = Math.max(30, Math.floor(widthPx / 8.5));
-  const breaks = toLineLengths(normalized, lineLength);
-  const lines = layout(lineLength, breaks, normalized);
-
-  const previewLines = lines.slice(0, 7);
-  return previewLines.join(" ") + (lines.length > 7 ? "…" : "");
-}
-
-function computeMinHeight(text, widthPx) {
-  const normalized = text.replace(/\n+/g, " ");
-  const lineLength = Math.max(30, Math.floor(widthPx / 8.5));
-  const breaks = toLineLengths(normalized, lineLength);
-  const lines = layout(lineLength, breaks, normalized).length;
-  return `${Math.max(lines * lineHeight + 80, 180)}px`;
-}
-
-function createCard(item, tipo) {
-  const article = document.createElement("article");
-  article.className = "card";
-
-  const title = document.createElement("h3");
-  title.textContent = item.titulo;
-
-  const meta = document.createElement("p");
-  meta.className = "meta";
-  meta.textContent = formatDate(item.fecha);
-
-  const text = document.createElement("div");
-  text.className = "card-text";
-
-  const preview = buildPreview(item.texto, article.clientWidth || 320, tipo);
-
-  if (tipo === "poema") {
-    text.innerHTML = preview.replace(/\n/g, "<br>");
-  } else {
-    text.textContent = preview;
-  }
-
-  const link = document.createElement("a");
-  link.className = "read-more";
-  link.textContent = "Leer completo";
-  link.href = `detalle.html?tipo=${tipo}&slug=${slugify(item.titulo)}`;
-
-  article.append(title, meta, text, link);
-
-  requestAnimationFrame(() => {
-    const width = article.clientWidth || 320;
-    article.style.minHeight = computeMinHeight(item.texto, width);
-  });
-
-  return article;
-}
-
-function filterItems(items) {
-  if (!query) return items;
-
-  return items.filter((item) => {
-    const base = `${item.titulo} ${item.texto}`.toLowerCase();
-    return base.includes(query);
+function splitFlowText() {
+  document.querySelectorAll(".flow-text").forEach(el => {
+    const text = el.textContent;
+    el.innerHTML = "";
+    text.split("").forEach(c => {
+      const span = document.createElement("span");
+      span.textContent = c;
+      el.appendChild(span);
+    });
   });
 }
 
-function render() {
-  const filteredPoems = filterItems(poems);
-  const filteredStories = filterItems(stories);
+function cursorEffect(e) {
+  root.style.setProperty("--mx", e.clientX + "px");
+  root.style.setProperty("--my", e.clientY + "px");
 
-  poemsContainer.innerHTML = "";
-  storiesContainer.innerHTML = "";
+  document.querySelectorAll(".flow-text span").forEach(span => {
+    const rect = span.getBoundingClientRect();
+    const dx = e.clientX - rect.left;
+    const dy = e.clientY - rect.top;
+    const d = Math.sqrt(dx*dx + dy*dy);
+    span.style.transform = `translateY(${Math.sin(d*0.05)*2}px)`;
+  });
+}
 
-  filteredPoems.forEach((p) =>
-    poemsContainer.appendChild(createCard(p, "poema"))
-  );
-  filteredStories.forEach((s) =>
-    storiesContainer.appendChild(createCard(s, "cuento"))
-  );
-
-  poemsCount.textContent = `${filteredPoems.length} textos`;
-  storiesCount.textContent = `${filteredStories.length} textos`;
-
-  if (query) {
-    searchStatus.textContent = `Resultados para “${query}”`;
-  } else {
-    searchStatus.textContent = "Mostrando toda la biblioteca.";
+function createSymbols() {
+  for (let i = 0; i < 20; i++) {
+    const s = document.createElement("span");
+    s.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+    s.style.left = Math.random()*100 + "%";
+    s.style.top = Math.random()*100 + "%";
+    symbolLayer.appendChild(s);
   }
 }
 
-async function init() {
-  currentYear.textContent = new Date().getFullYear();
+async function loadPoems() {
+  const res = await fetch("./content/poemas.json");
+  const data = await res.json();
+  const container = document.getElementById("poems-list");
 
-  const [p, s] = await Promise.all([
-    fetchCollection("./content/poemas.json"),
-    fetchCollection("./content/cuentos.json"),
-  ]);
-
-  poems = p.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-  stories = s.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-
-  render();
+  data.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `<h3>${p.titulo}</h3><p>${p.texto.slice(0,120)}...</p>`;
+    container.appendChild(card);
+  });
 }
 
-searchInput.addEventListener("input", (e) => {
-  query = e.target.value.toLowerCase().trim();
-  render();
-});
-
-clearButton.addEventListener("click", () => {
-  searchInput.value = "";
-  query = "";
-  render();
-});
-
-window.addEventListener("resize", () => {
-  render();
-});
+function init() {
+  splitFlowText();
+  createSymbols();
+  loadPoems();
+  window.addEventListener("pointermove", cursorEffect);
+}
 
 init();

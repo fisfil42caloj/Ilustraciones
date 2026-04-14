@@ -1,2 +1,0 @@
-# Ilustraciones
-Ilustraciones

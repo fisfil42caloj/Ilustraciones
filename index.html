@@ -10,14 +10,30 @@
     <title>Ángel · Poiesis de la ausencia</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
-  <body>
-    <header class="hero">
-      <p class="eyebrow">Biblioteca de autor</p>
-      <h1>Poemas y cuentos</h1>
+  <body class="theme-home">
+    <div class="cursor-aura" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="symbol-layer" id="symbol-layer" aria-hidden="true"></div>
+
+    <header class="hero shell">
+      <p class="eyebrow flow-text">Poiesis de la ausencia</p>
+      <h1 class="hero-title flow-text">
+        Entre la lámpara, el logos y la intemperie.
+      </h1>
       <p class="subtitle">
-        Un archivo sobrio para reunir poemas y cuentos en una sola casa textual,
-        con vistas previas legibles, lectura individual y búsqueda interna.
+        Una biblioteca de autor donde la lectura convive con una atmósfera de
+        umbral: filosofía, símbolos domésticos, mundo grecolatino y una materia
+        visual que acompaña el texto sin ahogarlo.
       </p>
+
+      <section class="veil panel">
+        <p class="veil-kicker">Umbral</p>
+        <p class="veil-copy">
+          Aquí la lectura no entra como visita: roza la taza, oye la lámpara,
+          cruza el cuarto y se demora donde la pregunta por el ser toca la casa.
+        </p>
+      </section>
+
       <nav class="hero-nav" aria-label="Secciones principales">
         <a href="#explorar">Explorar</a>
         <a href="#poemas">Poemas</a>
@@ -26,11 +42,11 @@
       </nav>
     </header>
 
-    <main>
-      <section id="explorar" class="panel explorer-panel">
+    <main class="shell main-grid">
+      <section id="explorar" class="panel reveal-panel explorer-panel">
         <div class="section-heading">
-          <p class="section-kicker">Explorar</p>
-          <h2>Buscar en la biblioteca</h2>
+          <p class="section-kicker flow-text">Explorar</p>
+          <h2 class="flow-text">Buscar en la biblioteca</h2>
           <p class="section-copy">
             Localiza títulos, motivos o palabras dentro de los textos y abre cada
             pieza en su propia página para leerla sin apilamiento.
@@ -43,7 +59,7 @@
               id="search-input"
               class="search-input"
               type="search"
-              placeholder="Ej.: silencio, lámpara, ciudad..."
+              placeholder="Ej.: silencio, casa, lámpara, sombra, ciudad..."
               autocomplete="off"
             />
             <button id="clear-search" class="ghost-button" type="button">
@@ -56,13 +72,14 @@
         </div>
       </section>
 
-      <section id="poemas" class="panel section-panel">
+      <section id="poemas" class="panel reveal-panel section-panel">
         <div class="section-heading split-heading">
           <div>
-            <p class="section-kicker">Sección I</p>
-            <h2>Poemas</h2>
+            <p class="section-kicker flow-text">Sección I</p>
+            <h2 class="flow-text">Poemas</h2>
             <p class="section-copy">
-              Cada pieza se abre aparte para una lectura más limpia y respirada.
+              Vistas previas respiradas y lectura individual para que cada pieza
+              conserve su propio espacio.
             </p>
           </div>
           <p id="poems-count" class="section-count"></p>
@@ -70,13 +87,14 @@
         <div id="poems-list" class="list" aria-live="polite"></div>
       </section>
 
-      <section id="cuentos" class="panel section-panel">
+      <section id="cuentos" class="panel reveal-panel section-panel">
         <div class="section-heading split-heading">
           <div>
-            <p class="section-kicker">Sección II</p>
-            <h2>Cuentos</h2>
+            <p class="section-kicker flow-text">Sección II</p>
+            <h2 class="flow-text">Cuentos</h2>
             <p class="section-copy">
-              Relatos y prosas narrativas con búsqueda y previsualización más amable.
+              Relatos y prosas narrativas en un entorno más simbólico que
+              ornamental.
             </p>
           </div>
           <p id="stories-count" class="section-count"></p>
@@ -84,27 +102,25 @@
         <div id="stories-list" class="list" aria-live="polite"></div>
       </section>
 
-      <section id="autor" class="panel about-panel">
+      <section id="autor" class="panel reveal-panel about-panel">
         <div class="section-heading">
-          <p class="section-kicker">Autor</p>
-          <h2>Sobre mí</h2>
+          <p class="section-kicker flow-text">Autor</p>
+          <h2 class="flow-text">Sobre mí</h2>
         </div>
         <p>
           Soy Ángel. Este sitio nace como archivo personal para publicar poemas y
-          cuentos con una presentación limpia, legible y enteramente controlada
-          por su autor.
+          cuentos con una presentación legible, filosóficamente cargada y en
+          diálogo con mi imaginario simbólico.
         </p>
         <p>
           Aquí no hay formularios públicos ni comentarios: solo texto, búsqueda,
-          lectura individual y una composición más cuidada.
+          lectura individual y una experiencia visual al servicio de la lectura.
         </p>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <p>
-        © <span id="current-year"></span> Ángel · Biblioteca de poemas y cuentos
-      </p>
+    <footer class="site-footer shell">
+      <p>© <span id="current-year"></span> Ángel · Biblioteca de poemas y cuentos</p>
     </footer>
 
     <script type="module" src="./app.js"></script>
