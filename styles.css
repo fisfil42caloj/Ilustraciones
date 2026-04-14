@@ -10,6 +10,39 @@
   --content-width: min(1120px, calc(100vw - 2rem));
 }
 
+body {
+  margin: 0;
+  font-family: Georgia, serif;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.hero, main, .site-footer {
+  width: var(--content-width);
+  margin: auto;
+}
+
+h1, h2, h3 {
+  font-weight: 600;
+}
+
+.panel {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.list {
+  display: grid;
+  gap: 1rem;
+}
+
+.card {
+  padding: 1rem;
+  border: 1px solid var(--line);
+}
+
 .search-shell {
   display: grid;
   gap: 0.5rem;
@@ -23,47 +56,19 @@
 .search-input {
   flex: 1;
   padding: 0.6rem;
-  border-radius: 0.6rem;
-  border: 1px solid var(--line);
 }
 
 .ghost-button {
-  border: 1px solid var(--line);
-  background: transparent;
-  border-radius: 0.6rem;
   padding: 0.6rem;
-  cursor: pointer;
-}
-
-.section-count {
-  color: var(--muted);
-  font-size: 0.9rem;
 }
 
 .read-more {
   display: inline-block;
-  margin-top: 0.8rem;
+  margin-top: 0.5rem;
   color: var(--accent);
-  text-decoration: none;
-  font-size: 0.9rem;
 }
 
 .detail-main {
   width: min(800px, 92vw);
   margin: 2rem auto;
 }
-
-.detail-article {
-  margin-top: 1rem;
-}
-
-.detail-text p {
-  margin-top: 1rem;
-}
-
-.back-link {
-  text-decoration: none;
-  color: var(--accent);
-}
-
-/* mantiene todo lo anterior */
