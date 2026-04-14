@@ -7,7 +7,7 @@
       name="description"
       content="Biblioteca de autor con poemas y cuentos de Ángel."
     />
-    <title>Ángel · Poemas y cuentos</title>
+    <title>Ángel · Poiesis de la ausencia</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -15,10 +15,11 @@
       <p class="eyebrow">Biblioteca de autor</p>
       <h1>Poemas y cuentos</h1>
       <p class="subtitle">
-        Un espacio sobrio para reunir poemas, cuentos y fragmentos en una sola
-        casa textual.
+        Un archivo sobrio para reunir poemas y cuentos en una sola casa textual,
+        con vistas previas legibles, lectura individual y búsqueda interna.
       </p>
       <nav class="hero-nav" aria-label="Secciones principales">
+        <a href="#explorar">Explorar</a>
         <a href="#poemas">Poemas</a>
         <a href="#cuentos">Cuentos</a>
         <a href="#autor">Sobre mí</a>
@@ -26,32 +27,59 @@
     </header>
 
     <main>
-      <section class="panel intro-panel">
-        <p>
-          Esta web no funciona como plataforma abierta. El contenido se publica y
-          se edita únicamente por el autor a través del repositorio, para
-          preservar una biblioteca cuidada, estable y sin ruido.
-        </p>
+      <section id="explorar" class="panel explorer-panel">
+        <div class="section-heading">
+          <p class="section-kicker">Explorar</p>
+          <h2>Buscar en la biblioteca</h2>
+          <p class="section-copy">
+            Localiza títulos, motivos o palabras dentro de los textos y abre cada
+            pieza en su propia página para leerla sin apilamiento.
+          </p>
+        </div>
+        <div class="search-shell">
+          <label class="search-label" for="search-input">Buscar</label>
+          <div class="search-row">
+            <input
+              id="search-input"
+              class="search-input"
+              type="search"
+              placeholder="Ej.: silencio, lámpara, ciudad..."
+              autocomplete="off"
+            />
+            <button id="clear-search" class="ghost-button" type="button">
+              Limpiar
+            </button>
+          </div>
+          <p id="search-status" class="search-status">
+            Mostrando toda la biblioteca.
+          </p>
+        </div>
       </section>
 
       <section id="poemas" class="panel section-panel">
-        <div class="section-heading">
-          <p class="section-kicker">Sección I</p>
-          <h2>Poemas</h2>
-          <p class="section-copy">
-            Textos en verso y piezas breves organizadas por fecha de publicación.
-          </p>
+        <div class="section-heading split-heading">
+          <div>
+            <p class="section-kicker">Sección I</p>
+            <h2>Poemas</h2>
+            <p class="section-copy">
+              Cada pieza se abre aparte para una lectura más limpia y respirada.
+            </p>
+          </div>
+          <p id="poems-count" class="section-count"></p>
         </div>
         <div id="poems-list" class="list" aria-live="polite"></div>
       </section>
 
       <section id="cuentos" class="panel section-panel">
-        <div class="section-heading">
-          <p class="section-kicker">Sección II</p>
-          <h2>Cuentos</h2>
-          <p class="section-copy">
-            Relatos y prosas narrativas reunidos en una colección paralela.
-          </p>
+        <div class="section-heading split-heading">
+          <div>
+            <p class="section-kicker">Sección II</p>
+            <h2>Cuentos</h2>
+            <p class="section-copy">
+              Relatos y prosas narrativas con búsqueda y previsualización más amable.
+            </p>
+          </div>
+          <p id="stories-count" class="section-count"></p>
         </div>
         <div id="stories-list" class="list" aria-live="polite"></div>
       </section>
@@ -62,21 +90,20 @@
           <h2>Sobre mí</h2>
         </div>
         <p>
-          Soy Ángel. Este sitio nace como un archivo personal para publicar
-          poemas y cuentos con una presentación limpia, legible y enteramente
-          controlada por su autor.
+          Soy Ángel. Este sitio nace como archivo personal para publicar poemas y
+          cuentos con una presentación limpia, legible y enteramente controlada
+          por su autor.
         </p>
         <p>
-          Aquí no hay formularios públicos ni comentarios: solo texto, orden y
-          permanencia.
+          Aquí no hay formularios públicos ni comentarios: solo texto, búsqueda,
+          lectura individual y una composición más cuidada.
         </p>
       </section>
     </main>
 
     <footer class="site-footer">
       <p>
-        © <span id="current-year"></span> Ángel · Biblioteca de poemas y
-        cuentos
+        © <span id="current-year"></span> Ángel · Biblioteca de poemas y cuentos
       </p>
     </footer>
 
